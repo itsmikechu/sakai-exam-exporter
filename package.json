@@ -5,8 +5,10 @@
   "main": "app.js",
   "dependencies": {
     "adm-zip": "^0.4.7",
+    "fs": "0.0.1-security",
     "jquery": "^3.2.1",
     "jsdom": "^11.1.0",
+    "read-xml": "^2.0.0",
     "zip-folder": "^1.0.0"
   },
   "devDependencies": {
