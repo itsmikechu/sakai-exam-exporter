@@ -1,7 +1,7 @@
 import AdmZip from 'adm-zip';
 import ZipFolder from 'zip-folder';
 
-class Zip {
+class Archiver {
     static unzip(pathToZip, parentDirectoryToSaveContentsInto) {
         console.log(`Unzipping contents of ${pathToZip} to ${parentDirectoryToSaveContentsInto}.`);
 
