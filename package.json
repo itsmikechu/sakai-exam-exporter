@@ -1,0 +1,31 @@
+{
+  "name": "sakai-exam-exporter",
+  "version": "1.0.0",
+  "description": "Exports and corrects QTI mistakes within the exported content package",
+  "main": "app.js",
+  "dependencies": {
+    "adm-zip": "^0.4.7",
+    "zip-folder": "^1.0.0"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.24.1",
+    "babel-preset-es2015": "^6.24.1",
+    "watch": "^1.0.2"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "watch": "watch \"npm run build && npm run start\" src",
+    "build": "babel src -d build --presets es2015",
+    "start": "node build/app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/itsmikechu/sakai-exam-exporter.git"
+  },
+  "author": "Mike Chu",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/itsmikechu/sakai-exam-exporter/issues"
+  },
+  "homepage": "https://github.com/itsmikechu/sakai-exam-exporter#readme"
+}
