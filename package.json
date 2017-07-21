@@ -13,7 +13,7 @@
     "fs-extra": "^4.0.0",
     "nightmare": "^2.10.0",
     "nightmare-inline-download": "^0.2.2",
-    "read-xml": "^2.0.0",
+    "pretty-data": "^0.40.0",
     "zip-folder": "^1.0.0"
   },
   "devDependencies": {

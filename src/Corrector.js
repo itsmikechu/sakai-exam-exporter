@@ -1,33 +1,31 @@
 require("babel-polyfill");
 
 import cheerio from 'cheerio';
+import { pd } from 'pretty-data';
 
 class Corrector {
-    static fixFlowTag(xmlToFix) {
-        // https://stackoverflow.com/questions/11258415/how-to-modify-xml-with-jquery
-        // https://www.npmjs.com/package/jquery
-        // https://cheerio.js.org/
-        console.log("Fixing <flow> tags...");
+    static selectCorrectAnswer(xmlToFix) {
+        return new Promise((resolve, reject) => {
+            console.log("Selecting correct answer...");
 
-        const text = cheerio(xmlToFix, {
-            ignoreWhitespace: true,
-            xmlMode: true 
-        }).text();
+            const $ = cheerio.load(xmlToFix, {
+                ignoreWhitespace: true,
+                xmlMode: true
+            });
 
-        console.log(text);
+            $('displayfeedback[linkrefid="Correct"]').map((element) => {
+                element.parent().find('setvar')[0].text(1); // Broken
+            });
 
-        console.log("Flow tags fixed.");
-        return xmlToFix;
+            resolve(xmlToFix);
+        });
     }
 
     static fixWhitespace(xmlToFix) {
-        // https://www.npmjs.com/package/xml-formatter
-        console.log("Fixing whitespace...");
-
-
-
-        console.log("Fixed whitespace.");
-        return xmlToFix;
+        return new Promise((resolve, reject) => {
+            console.log("Fixing whitespace...");
+            resolve(pd.xml(xmlToFix));
+        });
     }
 }
 

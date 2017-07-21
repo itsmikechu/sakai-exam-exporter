@@ -1,17 +1,18 @@
 require("babel-polyfill");
 
 import fs from 'fs-extra';
-import xmlReader from 'read-xml';
 
 class FileHandler {
-    static readXml(fileToRead) {
-        return '<some><xml></xml></some>';
+    static readQtiXml(fileToRead) {
+        return new Promise((resolve, reject) => {
+            console.log(`Reading xml file ${fileToRead} ...`);
+
+            resolve(fs.readFileSync(fileToRead, 'utf8'));
+        });
     }
 
-    static writeXml(xmlToWrite) {
-        console.log("Writing new XML to file...");
-
-        console.log('XML written.')
+    static writeXml(xmlToWrite, filePath) {
+        return fs.writeFile(filePath, xmlToWrite);
     }
 
     static deleteUnzipDirectory(directoryPath) {
