@@ -1,25 +1,31 @@
+
+require("babel-polyfill");
+
 import Archiver from './Archiver';
 import Downloader from './Downloader';
 import Corrector from './Corrector';
-import fs from 'fs';
-import xmlReader from 'read-xml';
+import FileHandler from './FileHandler';
 
 console.log("Starting.");
 
-function start() { 
+async function start() {
     const urlToDownloadFrom = 'https://study.ashworthcollege.edu/samigo-app/servlet/DownloadCP?&assessmentId=106635';
     const pathToSaveZipTo = 'c:\\Users\\mike\\Downloads\\downloaded.zip';
     const folderWithUnzippedContent = 'c:\\Users\\mike\\Downloads\\unzipped';
     const xmlFilePath = `${folderWithUnzippedContent}\\exportAssessment.xml`;
 
-    Downloader.downloadPackage(urlToDownloadFrom, pathToSaveZipTo);
-    Archiver.unzip(pathToSaveZipTo, folderWithUnzippedContent);
+    await Downloader.downloadPackage(urlToDownloadFrom, pathToSaveZipTo);
+    await Archiver.extractContentPackage(pathToSaveZipTo, folderWithUnzippedContent);
 
-    fs.read
-    Corrector.fixFlowTag(xmlFilePath);
-    Corrector.fixWhitespace()
+    // const readyXml = Corrector.fixWhitespace(Corrector.fixFlowTag(FileHandler.readXml(xmlFilePath)));
 
-    Archiver.rezip(folderWithUnzippedContent, 'c:\\Users\\mike\\Downloads\\rezipped.zip');
+    // console.log(readyXml);
+
+    // FileHandler.writeXml(readyXml);
+
+    await Archiver.rezip(folderWithUnzippedContent, 'c:\\Users\\mike\\Downloads\\rezipped.zip');
+
+    await FileHandler.deleteUnzipDirectory(folderWithUnzippedContent);
 }
 
 start();

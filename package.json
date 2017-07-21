@@ -5,9 +5,14 @@
   "main": "app.js",
   "dependencies": {
     "adm-zip": "^0.4.7",
-    "fs": "0.0.1-security",
-    "jquery": "^3.2.1",
-    "jsdom": "^11.1.0",
+    "babel-plugin-syntax-async-functions": "^6.13.0",
+    "babel-plugin-transform-regenerator": "^6.24.1",
+    "babel-polyfill": "^6.23.0",
+    "cheerio": "^1.0.0-rc.2",
+    "download": "^6.2.5",
+    "fs-extra": "^4.0.0",
+    "nightmare": "^2.10.0",
+    "nightmare-inline-download": "^0.2.2",
     "read-xml": "^2.0.0",
     "zip-folder": "^1.0.0"
   },

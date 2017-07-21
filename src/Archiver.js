@@ -1,23 +1,34 @@
+require("babel-polyfill");
+
 import AdmZip from 'adm-zip';
-import ZipFolder from 'zip-folder';
+import zipFolder from 'zip-folder';
 
 class Archiver {
-    static unzip(pathToZip, parentDirectoryToSaveContentsInto) {
-        console.log(`Unzipping contents of ${pathToZip} to ${parentDirectoryToSaveContentsInto}...`);
-
-        const zipFile = new AdmZip(pathToZip);
-        zipFile.extractAllTo(parentDirectoryToSaveContentsInto);
-
-        console.log("Unzip completed.");
+    static extractContentPackage(pathToZip, parentDirectoryToSaveContentsInto) {
+        return new Promise((resolve, reject) => {
+            console.log(`Unzipping ${pathToZip} content pacakge to ${parentDirectoryToSaveContentsInto} ...`);
+            const zip = new AdmZip(pathToZip);
+            zip.extractAllTo(parentDirectoryToSaveContentsInto);
+            console.log("Unzipping completed.");
+            resolve();
+        });
     }
 
     static rezip(directoryToRezip, fullFilePathToSaveNewZipTo) {
-        console.log(`Rezipping directory contents ${directoryToRezip} to file ${fullFilePathToSaveNewZipTo}...`);
-
-        ZipFolder(directoryToRezip, fullFilePathToSaveNewZipTo, () => {
-            console.log("Rezip completed.");
+        return new Promise((resolve, reject) => {
+            console.log(`Rezipping directory contents ${directoryToRezip} to file ${fullFilePathToSaveNewZipTo}...`);
+            zipFolder(directoryToRezip, fullFilePathToSaveNewZipTo, (error) => {
+                if (error) {
+                    console.log("Error while zipping.");
+                    reject();
+                }
+                else {
+                    console.log("Rezipped.");
+                    resolve();
+                }
+            });
         });
     }
 }
 
-export default Zip;  
+export default Archiver;  
