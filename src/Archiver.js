@@ -3,7 +3,7 @@ import ZipFolder from 'zip-folder';
 
 class Archiver {
     static unzip(pathToZip, parentDirectoryToSaveContentsInto) {
-        console.log(`Unzipping contents of ${pathToZip} to ${parentDirectoryToSaveContentsInto}.`);
+        console.log(`Unzipping contents of ${pathToZip} to ${parentDirectoryToSaveContentsInto}...`);
 
         const zipFile = new AdmZip(pathToZip);
         zipFile.extractAllTo(parentDirectoryToSaveContentsInto);
@@ -12,12 +12,11 @@ class Archiver {
     }
 
     static rezip(directoryToRezip, fullFilePathToSaveNewZipTo) {
-        console.log(`Rezipping directory contents ${directoryToRezip} to file ${fullFilePathToSaveNewZipTo}.`);
+        console.log(`Rezipping directory contents ${directoryToRezip} to file ${fullFilePathToSaveNewZipTo}...`);
 
         ZipFolder(directoryToRezip, fullFilePathToSaveNewZipTo, () => {
             console.log("Rezip completed.");
         });
-
     }
 }
 
