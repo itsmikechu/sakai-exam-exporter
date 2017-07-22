@@ -13,17 +13,21 @@ class Corrector {
                 xmlMode: true
             });
 
-            $('displayfeedback[linkrefid="Correct"]').map((element) => {
-                element.parent().find('setvar')[0].text(1); // Broken
+            $('displayfeedback[linkrefid="Correct"]').map((index, element) => {
+                $(element).parent().find('setvar').first().text(1);
+                //console.log(`Set correct answer to ${$(element).parent().find('varequal').first().text()}`);
             });
-
-            resolve(xmlToFix);
+            
+            const fixtedXml = $.html();
+            
+            console.log("Answers selected.")
+            resolve(fixtedXml);
         });
     }
 
     static fixWhitespace(xmlToFix) {
         return new Promise((resolve, reject) => {
-            console.log("Fixing whitespace...");
+            console.log("Fixing whitespace.");
             resolve(pd.xml(xmlToFix));
         });
     }
