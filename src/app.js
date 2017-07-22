@@ -20,12 +20,13 @@ async function start() {
     const rawXml = await FileHandler.readQtiXml(xmlFilePath);
 
     const correctAnswerXml = await Corrector.selectCorrectAnswer(rawXml);
-    const formattedXml = await Corrector.fixWhitespace(correctAnswerXml, true);
-
+    const removedClassXml = await Corrector.removeClassAttributes(correctAnswerXml);
+    const formattedXml = await Corrector.fixWhitespace(removedClassXml);
+ 
     await FileHandler.writeXml(formattedXml, xmlFilePath); 
 
     await Archiver.rezip(folderWithUnzippedContent, 'c:\\Users\\mike\\Downloads\\rezipped.zip');
-
+ 
     //await FileHandler.deleteUnzipDirectory(folderWithUnzippedContent);
 }
 
