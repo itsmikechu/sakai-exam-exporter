@@ -21,7 +21,16 @@ async function start() {
     const rawXml = await FileHandler.readQtiXml(xmlFilePath);
     const correctAnswerXml = await Corrector.selectCorrectAnswer(rawXml);
     const removedClassXml = await Corrector.removeClassAttributes(correctAnswerXml);
-    const formattedXml = await Corrector.fixWhitespace(removedClassXml);
+   
+    let droppedNodes = "";
+    await Corrector.dropNodes(removedClassXml, 'qticomment')
+        .then((xml) => Corrector.dropNodes(xml, 'qtimetadata'))
+        .then((xml) => Corrector.dropNodes(xml, 'assessmentcontrol'))
+        .then((xml) => Corrector.dropNodes(xml, 'rubric'))
+        .then((xml) => Corrector.dropNodes(xml, 'duration'))
+        .then((xml) => droppedNodes = xml);
+
+    const formattedXml = await Corrector.fixWhitespace(droppedNodes);
  
     await FileHandler.writeXml(formattedXml, xmlFilePath); 
 

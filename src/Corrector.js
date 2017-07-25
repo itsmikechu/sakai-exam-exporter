@@ -20,10 +20,10 @@ class Corrector {
                 $(element).parent().find('setvar').first().text(0);
             }); 
 
-            const fixtedXml = $.html();
+            const fixedXml = $.html();
 
             console.log("Answers selected.")
-            resolve(fixtedXml); 
+            resolve(fixedXml); 
         });
     }
 
@@ -40,17 +40,37 @@ class Corrector {
                 $(element).removeAttr('class');
             });
 
-            const fixtedXml = $.html();
+            const fixedXml = $.html();
 
             console.log("Answers selected.")
-            resolve(fixtedXml);
+            resolve(fixedXml);
+        });
+    }
+
+    static dropNodes(xml, nodeName) {
+        return new Promise((resolve, reject) => {
+            console.log(`Dropping tag ${nodeName}...`);
+
+            const $ = cheerio.load(xml, {
+                ignoreWhitespace: true,
+                xmlMode: true
+            });
+
+            $(nodeName).map((index, element) => {
+                $(element).remove();
+            });
+
+            const fixedXml = $.html();
+
+            console.log("Drops completed.")
+            resolve(fixedXml);
         });
     }
 
     static fixWhitespace(xmlToFix) {
         return new Promise((resolve, reject) => {
             console.log("Fixing whitespace.");
-            resolve(pd.xmlmin(xmlToFix));
+            resolve(pd.xml(xmlToFix));
         }); 
     }
 }
