@@ -9,6 +9,7 @@ import FileHandler from './FileHandler';
 console.log("Starting...");
 
 async function start() {
+    // Will come from CSV once looped
     const urlToDownloadFrom = 'https://study.ashworthcollege.edu/samigo-app/servlet/DownloadCP?&assessmentId=106635';
     const pathToSaveZipTo = 'c:\\Users\\mike\\Downloads\\downloaded.zip';
     const folderWithUnzippedContent = 'c:\\Users\\mike\\Downloads\\unzipped';
@@ -18,7 +19,6 @@ async function start() {
     await Archiver.extractContentPackage(pathToSaveZipTo, folderWithUnzippedContent);
 
     const rawXml = await FileHandler.readQtiXml(xmlFilePath);
-
     const correctAnswerXml = await Corrector.selectCorrectAnswer(rawXml);
     const removedClassXml = await Corrector.removeClassAttributes(correctAnswerXml);
     const formattedXml = await Corrector.fixWhitespace(removedClassXml);

@@ -16,11 +16,14 @@ class Corrector {
             $('displayfeedback[linkrefid="Correct"]').map((index, element) => {
                 $(element).parent().find('setvar').first().text(1);
             });
-            
+            $('displayfeedback[linkrefid="InCorrect"]').map((index, element) => {
+                $(element).parent().find('setvar').first().text(0);
+            }); 
+
             const fixtedXml = $.html();
-            
+
             console.log("Answers selected.")
-            resolve(fixtedXml);
+            resolve(fixtedXml); 
         });
     }
 
@@ -30,15 +33,15 @@ class Corrector {
 
             const $ = cheerio.load(xmlToFix, {
                 ignoreWhitespace: true,
-                xmlMode: true 
+                xmlMode: true
             });
 
             $('[class="Block"]').map((index, element) => {
                 $(element).removeAttr('class');
             });
-            
+
             const fixtedXml = $.html();
-            
+
             console.log("Answers selected.")
             resolve(fixtedXml);
         });
@@ -48,7 +51,7 @@ class Corrector {
         return new Promise((resolve, reject) => {
             console.log("Fixing whitespace.");
             resolve(pd.xmlmin(xmlToFix));
-        });
+        }); 
     }
 }
 
