@@ -3,7 +3,7 @@ require("babel-polyfill");
 import cheerio from 'cheerio';
 import { pd } from 'pretty-data';
 
-class Corrector {
+class QtiCorrector {
     static selectCorrectAnswer(xmlToFix) {
         return new Promise((resolve, reject) => {
             console.log("Selecting correct answer...");
@@ -46,6 +46,17 @@ class Corrector {
             resolve(fixedXml);
         });
     }
+    
+    static addXmlDeclaration(currentXml) {
+        return new Promise((resolve, reject) => {
+            console.log("Adding XML declaration...");
+            
+            const fixedXml = '<?xml version="1.0"  encoding="UTF-8" ?>' + currentXml;
+
+            console.log("Declaration added.")
+            resolve(fixedXml);
+        });
+    }
 
     static dropNodes(xml, nodeName) {
         return new Promise((resolve, reject) => {
@@ -75,4 +86,4 @@ class Corrector {
     }
 }
 
-export default Corrector;
+export default QtiCorrector;

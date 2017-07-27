@@ -3,7 +3,7 @@ require("babel-polyfill");
 import fs from 'fs-extra';
 
 class FileHandler {
-    static readQtiXml(fileToRead) {
+    static readXml(fileToRead) {
         return new Promise((resolve, reject) => {
             console.log(`Reading xml file ${fileToRead} ...`);
 
