@@ -6,24 +6,23 @@ import QtiCorrector from './QtiCorrector';
 import ManifestCorrector from './ManifestCorrector';
 import FileHandler from './FileHandler';
 
-console.log("Starting..."); 
+console.log("Starting...");
 
-async function start() {
-    // Will come from CSV once looped
-    const urlToDownloadFrom = 'https://study.ashworthcollege.edu/samigo-app/servlet/DownloadCP?&assessmentId=106635';
-    const pathToSaveZipTo = 'c:\\Users\\mike\\Downloads\\downloaded.zip';
+async function start(assessmentId, guid) {
+    const urlToDownloadFrom = `https://study.ashworthcollege.edu/samigo-app/servlet/DownloadCP?&assessmentId=${assessmentId}`;
+    const pathToSaveZipTo = `c:\\Users\\mike\\Downloads\\${guid}\\${assessmentId}.zip`;
     const folderWithUnzippedContent = 'c:\\Users\\mike\\Downloads\\unzipped';
     const qtiXmlFile = `${folderWithUnzippedContent}\\exportAssessment.xml`;
     const manifestXmlFile = `${folderWithUnzippedContent}\\imsmanifest.xml`;
 
-    //await Downloader.downloadPackage(urlToDownloadFrom, pathToSaveZipTo);
+    await Downloader.downloadPackage(urlToDownloadFrom, pathToSaveZipTo);
     await Archiver.extractContentPackage(pathToSaveZipTo, folderWithUnzippedContent);
 
     let qtiXml = "";
     await FileHandler.readXml(qtiXmlFile)
         .then((xml) => QtiCorrector.selectCorrectAnswer(xml))
         .then((xml) => QtiCorrector.removeClassAttributes(xml))
-        .then((xml) => QtiCorrector.addXmlDeclaration(xml)) 
+        .then((xml) => QtiCorrector.addXmlDeclaration(xml))
         .then((xml) => QtiCorrector.dropNodes(xml, 'qticomment'))
         .then((xml) => QtiCorrector.dropNodes(xml, 'qtimetadata'))
         .then((xml) => QtiCorrector.dropNodes(xml, 'assessmentcontrol'))
@@ -34,7 +33,7 @@ async function start() {
         .then((xml) => QtiCorrector.dropNodes(xml, 'selection_ordering'))
         .then((xml) => QtiCorrector.dropNodes(xml, 'itemmetadata'))
         .then((xml) => QtiCorrector.removeEmptyAnswers(xml))
-        .then((xml) => QtiCorrector.unwrapContent(xml, 'flow')) 
+        .then((xml) => QtiCorrector.unwrapContent(xml, 'flow'))
         .then((xml) => QtiCorrector.fixWhitespace(xml))
         .then((xml) => qtiXml = xml);
 
@@ -47,14 +46,19 @@ async function start() {
         .then((xml) => ManifestCorrector.setTitle(xml, examTitle))
         .then((xml) => ManifestCorrector.fixWhitespace(xml))
         .then((xml) => manifestXml = xml);
- 
+
     await FileHandler.writeXml(qtiXml, `${folderWithUnzippedContent}\\${examTitle}.xml`);
     await FileHandler.deleteFile(qtiXmlFile);
     await FileHandler.writeXml(manifestXml, manifestXmlFile);
 
-    await Archiver.rezip(folderWithUnzippedContent, 'c:\\Users\\mike\\Downloads\\rezipped.zip');
- 
-    //await FileHandler.deleteUnzipDirectory(folderWithUnzippedContent);
+    await Archiver.rezip(folderWithUnzippedContent, `c:\\Users\\mike\\Downloads\\${examTitle}.zip`);
+
+    await FileHandler.deleteUnzipDirectory(folderWithUnzippedContent);
 }
 
-start();
+start(106635, 'b7d1a71a-f4c2-42d1-9642-dcea4c03622b');
+// start(106636, 'b7d1a71a-f4c2-42d1-9642-dcea4c03622b');
+// start(106638, 'b7d1a71a-f4c2-42d1-9642-dcea4c03622b');
+// start(106639, 'b7d1a71a-f4c2-42d1-9642-dcea4c03622b');
+// start(106640, 'b7d1a71a-f4c2-42d1-9642-dcea4c03622b');
+// start(106641, 'b7d1a71a-f4c2-42d1-9642-dcea4c03622b');
