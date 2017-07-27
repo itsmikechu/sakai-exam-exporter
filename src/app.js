@@ -1,4 +1,3 @@
-
 require("babel-polyfill");
 
 import Archiver from './Archiver';
@@ -24,27 +23,33 @@ async function start() {
     await FileHandler.readXml(qtiXmlFile)
         .then((xml) => QtiCorrector.selectCorrectAnswer(xml))
         .then((xml) => QtiCorrector.removeClassAttributes(xml))
+        .then((xml) => QtiCorrector.addXmlDeclaration(xml)) 
         .then((xml) => QtiCorrector.dropNodes(xml, 'qticomment'))
-        .then((xml) => QtiCorrector.addXmlDeclaration(xml))
         .then((xml) => QtiCorrector.dropNodes(xml, 'qtimetadata'))
         .then((xml) => QtiCorrector.dropNodes(xml, 'assessmentcontrol'))
         .then((xml) => QtiCorrector.dropNodes(xml, 'rubric'))
         .then((xml) => QtiCorrector.dropNodes(xml, 'duration'))
         .then((xml) => QtiCorrector.dropNodes(xml, 'presentation_material'))
-        .then((xml) => QtiCorrector.dropNodes(xml, 'assessfeedback')) 
+        .then((xml) => QtiCorrector.dropNodes(xml, 'assessfeedback'))
         .then((xml) => QtiCorrector.dropNodes(xml, 'selection_ordering'))
         .then((xml) => QtiCorrector.dropNodes(xml, 'itemmetadata'))
+        .then((xml) => QtiCorrector.removeEmptyAnswers(xml))
+        .then((xml) => QtiCorrector.unwrapContent(xml, 'flow')) 
         .then((xml) => QtiCorrector.fixWhitespace(xml))
         .then((xml) => qtiXml = xml);
+
+    const examTitle = (await QtiCorrector.getExamTitle(qtiXml)).replace(',', '');
 
     let manifestXml = "";
     await FileHandler.readXml(manifestXmlFile)
         .then((xml) => ManifestCorrector.addSchemaTag(xml))
         .then((xml) => ManifestCorrector.addSchemaVersionTag(xml))
+        .then((xml) => ManifestCorrector.setTitle(xml, examTitle))
         .then((xml) => ManifestCorrector.fixWhitespace(xml))
         .then((xml) => manifestXml = xml);
  
-    await FileHandler.writeXml(qtiXml, qtiXmlFile);
+    await FileHandler.writeXml(qtiXml, `${folderWithUnzippedContent}\\${examTitle}.xml`);
+    await FileHandler.deleteFile(qtiXmlFile);
     await FileHandler.writeXml(manifestXml, manifestXmlFile);
 
     await Archiver.rezip(folderWithUnzippedContent, 'c:\\Users\\mike\\Downloads\\rezipped.zip');

@@ -10,7 +10,7 @@ class FileHandler {
             resolve(fs.readFileSync(fileToRead, 'utf8'));
         });
     }
-
+ 
     static writeXml(xmlToWrite, filePath) {
         return fs.writeFile(filePath, xmlToWrite);
     }
@@ -21,6 +21,10 @@ class FileHandler {
             .then(() => {
                 console.log('Deleted unzip folder.');
             });
+    }
+
+    static deleteFile(filePath) {
+        return fs.remove(filePath);
     }
 }
 

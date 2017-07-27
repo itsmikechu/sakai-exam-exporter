@@ -18,12 +18,50 @@ class QtiCorrector {
             });
             $('displayfeedback[linkrefid="InCorrect"]').map((index, element) => {
                 $(element).parent().find('setvar').first().text(0);
-            }); 
+            });
 
             const fixedXml = $.html();
 
             console.log("Answers selected.")
-            resolve(fixedXml); 
+            resolve(fixedXml);
+        });
+    }
+
+    static removeEmptyAnswers(xmlToFix) {
+         return new Promise((resolve, reject) => {
+            console.log("Removing excess answers...");
+
+            const $ = cheerio.load(xmlToFix, {
+                ignoreWhitespace: true,
+                xmlMode: true
+            });
+
+            $('response_label').map((index, element) => {
+               if (typeof $(element).attr('ident') === 'undefined') {
+                   $(element).remove();
+               }
+            });
+
+            const fixedXml = $.html();
+
+            console.log("Answers cleaned.")
+            resolve(fixedXml);
+        });
+    }
+
+    static getExamTitle(xml) {
+        return new Promise((resolve, reject) => {
+            console.log("Finding title...");
+
+            const $ = cheerio.load(xml, {
+                ignoreWhitespace: true,
+                xmlMode: true
+            });
+
+            const title = $('assessment').first().attr('title');
+
+            console.log("Found title.")
+            resolve(title);
         });
     }
 
@@ -46,11 +84,11 @@ class QtiCorrector {
             resolve(fixedXml);
         });
     }
-    
+
     static addXmlDeclaration(currentXml) {
         return new Promise((resolve, reject) => {
             console.log("Adding XML declaration...");
-            
+
             const fixedXml = '<?xml version="1.0"  encoding="UTF-8" ?>' + currentXml;
 
             console.log("Declaration added.")
@@ -78,11 +116,33 @@ class QtiCorrector {
         });
     }
 
+    static unwrapContent(xml, nodeName) {
+        return new Promise((resolve, reject) => {
+            console.log(`Unwrapping tag ${nodeName}...`);
+
+            const $ = cheerio.load(xml, {
+                ignoreWhitespace: true,
+                xmlMode: true
+            });
+
+            $(nodeName).map((index, element) => {
+               const content = $(element).children();
+               $(element).parent().empty().append(content);
+            });
+
+            const fixedXml = $.html();
+
+            console.log("Unwarp completed.")
+            resolve(fixedXml);
+        });
+    }
+
+
     static fixWhitespace(xmlToFix) {
         return new Promise((resolve, reject) => {
             console.log("Fixing whitespace.");
             resolve(pd.xml(xmlToFix));
-        }); 
+        });
     }
 }
 

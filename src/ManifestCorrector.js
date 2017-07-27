@@ -29,6 +29,18 @@ class ManifestCorretcor {
         });
     }
 
+    static setTitle(xml, title) {
+        return new Promise((resolve, reject) => {
+            console.log(`Setting title to ${title}...`);
+
+            const fixedXml = xml.split('exportAssessment').join(title);
+
+            console.log("Title set.")
+
+            resolve(fixedXml);
+        });
+    } 
+
     static addSchemaVersionTag(xmlToFix) {
         return new Promise((resolve, reject) => {
             console.log("Adding schemaversion tag...");
