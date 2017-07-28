@@ -1,16 +1,21 @@
-require("babel-polyfill"); 
+require("babel-polyfill");
+
+import Nightmare from 'Nightmare';
+import path from 'path';
 
 class Downloader {
-    static downloadPackage(downloadUrl, pathToSaveTo) {
+    static async downloadPackage(downloadUrl, pathToSaveTo) {
         console.log(`Downloading content package from ${downloadUrl} to ${pathToSaveTo} ...`);
 
         const loginUrl = 'https://study.ashworthcollege.edu/portal';
 
-        const Nightmare = require('nightmare');
         require('nightmare-inline-download')(Nightmare);
 
-        const nightmare = new Nightmare()
-        return nightmare
+        await new Nightmare({
+            paths: {
+                downloads: path.dirname(pathToSaveTo)
+            },
+        })
             // login      
             .goto(loginUrl)
             .type('#eid', 'mchu.adm')
