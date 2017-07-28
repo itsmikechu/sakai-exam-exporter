@@ -16,8 +16,6 @@ class App {
         const qtiXmlFile = `${pathToUnzipTo}\\exportAssessment.xml`;
         const manifestXmlFile = `${pathToUnzipTo}\\imsmanifest.xml`;
 
-        const fileHandler = new FileHandler();
-
         await (new Downloader()).downloadPackage(urlToDownloadFrom, pathToSaveZipTo);
         
         const archiver = new Archiver();
@@ -25,6 +23,7 @@ class App {
 
         const qtiCorrector = new QtiCorrector();
 
+        const fileHandler = new FileHandler();
         let qtiXml = "";
         await fileHandler.readXml(qtiXmlFile)
             .then((xml) => qtiCorrector.selectCorrectAnswer(xml))
