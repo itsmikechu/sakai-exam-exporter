@@ -1,6 +1,7 @@
 require("babel-polyfill");
 
 import fs from 'fs-extra';
+import csv from 'csvtojson';
 
 class FileHandler {
     readXml(fileToRead) {
@@ -10,9 +11,26 @@ class FileHandler {
             resolve(fs.readFileSync(fileToRead, 'utf8'));
         });
     }
- 
+
     writeXml(xmlToWrite, filePath) {
         return fs.writeFile(filePath, xmlToWrite);
+    }
+
+    readCsv(csvFilePath) {
+        console.log('Reading CSV file...');
+
+        return new Promise((resolve, reject) => {
+            const exams = [];
+            csv()
+                .fromFile(csvFilePath)
+                .on('json', (exam) => {
+                    exams.push(exam);
+                })
+                .on('done', (error) => {
+                    console.log('File read.');
+                    resolve(exams);
+                });
+        });
     }
 
     deleteDirectory(directoryPath) {

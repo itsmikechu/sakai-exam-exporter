@@ -68,46 +68,19 @@ class App {
         console.log(`Completed processing ${assessmentId}. Files saved to ${outputFile}`);
     }
 
-    static async main() {
+    static async main(csvPath) {
         console.time('main');
 
-        const exams = [
-            {
-                id: 106635,
-                guid: 'b7d1a71a-f4c2-42d1-9642-dcea4c03622b',
-            },
-            {
-                id: 106636,
-                guid: 'b7d1a71a-f4c2-42d1-9642-dcea4c03622b',
-            },
-            {
-                id: 106637,
-                guid: 'b7d1a71a-f4c2-42d1-9642-dcea4c03622b',
-            },
-            {
-                id: 106638,
-                guid: 'b7d1a71a-f4c2-42d1-9642-dcea4c03622b',
-            },
-            {
-                id: 106639,
-                guid: 'b7d1a71a-f4c2-42d1-9642-dcea4c03622b',
-            },
-            {
-                id: 106640,
-                guid: 'b7d1a71a-f4c2-42d1-9642-dcea4c03622b',
-            },
-            {
-                id: 106641,
-                guid: 'b7d1a71a-f4c2-42d1-9642-dcea4c03622b',
-            },
-        ];
+        const fileHandler = new FileHandler();
+        const exams = await fileHandler.readCsv(csvPath);
 
         for (let exam of exams) {
             await (new App()).process(exam.id, exam.guid);
         }
 
-        console.log('Done with batch:', console.timeEnd('main'));
+        console.log('Done with batch.');
+        console.timeEnd('main');
     }
 }
 
-App.main();
+App.main('c:\\Users\\mike\\Desktop\\export.csv');
