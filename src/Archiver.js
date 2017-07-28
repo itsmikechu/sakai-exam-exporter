@@ -4,7 +4,7 @@ import AdmZip from 'adm-zip';
 import zipFolder from 'zip-folder';
 
 class Archiver {
-    static extractContentPackage(pathToZip, parentDirectoryToSaveContentsInto) {
+    extractContentPackage(pathToZip, parentDirectoryToSaveContentsInto) {
         return new Promise((resolve, reject) => {
             console.log(`Unzipping ${pathToZip} content pacakge to ${parentDirectoryToSaveContentsInto} ...`);
             const zip = new AdmZip(pathToZip);
@@ -14,7 +14,7 @@ class Archiver {
         });
     }
 
-    static rezip(directoryToRezip, fullFilePathToSaveNewZipTo) {
+    rezip(directoryToRezip, fullFilePathToSaveNewZipTo) {
         return new Promise((resolve, reject) => {
             console.log(`Rezipping directory contents ${directoryToRezip} to file ${fullFilePathToSaveNewZipTo}...`);
             zipFolder(directoryToRezip, fullFilePathToSaveNewZipTo, (error) => {

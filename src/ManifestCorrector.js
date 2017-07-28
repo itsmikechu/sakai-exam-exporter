@@ -4,14 +4,14 @@ import cheerio from 'cheerio';
 import { pd } from 'pretty-data';
 
 class ManifestCorretcor {
-    static fixWhitespace(xmlToFix) {
+    fixWhitespace(xmlToFix) {
         return new Promise((resolve, reject) => {
             console.log("Fixing whitespace.");
             resolve(pd.xml(xmlToFix));
         }); 
     }
 
-    static addSchemaTag(xmlToFix) {
+    addSchemaTag(xmlToFix) {
         return new Promise((resolve, reject) => {
             console.log("Adding schema...");
 
@@ -29,7 +29,7 @@ class ManifestCorretcor {
         });
     }
 
-    static setTitle(xml, title) {
+    setTitle(xml, title) {
         return new Promise((resolve, reject) => {
             console.log(`Setting title to ${title}...`);
 
@@ -41,7 +41,7 @@ class ManifestCorretcor {
         });
     } 
 
-    static addSchemaVersionTag(xmlToFix) {
+    addSchemaVersionTag(xmlToFix) {
         return new Promise((resolve, reject) => {
             console.log("Adding schemaversion tag...");
 

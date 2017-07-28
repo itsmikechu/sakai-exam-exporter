@@ -4,20 +4,18 @@ import Nightmare from 'Nightmare';
 import path from 'path';
 
 class Downloader {
-    static async downloadPackage(downloadUrl, pathToSaveTo) {
+    async downloadPackage(downloadUrl, pathToSaveTo) {
         console.log(`Downloading content package from ${downloadUrl} to ${pathToSaveTo} ...`);
-
-        const loginUrl = 'https://study.ashworthcollege.edu/portal';
 
         require('nightmare-inline-download')(Nightmare);
 
-        await new Nightmare({
+        await Nightmare({
             paths: {
                 downloads: path.dirname(pathToSaveTo)
             },
-        })
+        }) 
             // login      
-            .goto(loginUrl)
+            .goto('https://study.ashworthcollege.edu/portal')
             .type('#eid', 'mchu.adm')
             .type('#pw', 'vrM5tPsl4*^H407nz')
             .click('#submit')
@@ -27,7 +25,10 @@ class Downloader {
             .goto(`javascript:document.write(\"<a href='${downloadUrl}' id='click-me'>Click</a>\");`)
             // then click it
             .click('#click-me')
+            // wait for the download
             .download(pathToSaveTo)
+            // logout the session
+            .goto('https://study.ashworthcollege.edu/portal/logout')
             .end()
             .then(() => {
                 console.log("Download completed.")

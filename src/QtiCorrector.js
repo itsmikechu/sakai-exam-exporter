@@ -4,7 +4,7 @@ import cheerio from 'cheerio';
 import { pd } from 'pretty-data';
 
 class QtiCorrector {
-    static selectCorrectAnswer(xmlToFix) {
+    selectCorrectAnswer(xmlToFix) {
         return new Promise((resolve, reject) => {
             console.log("Selecting correct answer...");
 
@@ -27,7 +27,7 @@ class QtiCorrector {
         });
     }
 
-    static removeEmptyAnswers(xmlToFix) {
+    removeEmptyAnswers(xmlToFix) {
          return new Promise((resolve, reject) => {
             console.log("Removing excess answers...");
 
@@ -49,7 +49,7 @@ class QtiCorrector {
         });
     }
 
-    static getExamTitle(xml) {
+    getExamTitle(xml) {
         return new Promise((resolve, reject) => {
             console.log("Finding title...");
 
@@ -65,7 +65,7 @@ class QtiCorrector {
         });
     }
 
-    static removeClassAttributes(xmlToFix) {
+    removeClassAttributes(xmlToFix) {
         return new Promise((resolve, reject) => {
             console.log("Removing class='Block' attributes...");
 
@@ -85,7 +85,7 @@ class QtiCorrector {
         });
     }
 
-    static addXmlDeclaration(currentXml) {
+    addXmlDeclaration(currentXml) {
         return new Promise((resolve, reject) => {
             console.log("Adding XML declaration...");
 
@@ -96,7 +96,7 @@ class QtiCorrector {
         });
     }
 
-    static dropNodes(xml, nodeName) {
+    dropNodes(xml, nodeName) {
         return new Promise((resolve, reject) => {
             console.log(`Dropping tag ${nodeName}...`);
 
@@ -116,7 +116,7 @@ class QtiCorrector {
         });
     }
 
-    static unwrapContent(xml, nodeName) {
+    unwrapContent(xml, nodeName) {
         return new Promise((resolve, reject) => {
             console.log(`Unwrapping tag ${nodeName}...`);
 
@@ -138,7 +138,7 @@ class QtiCorrector {
     }
 
 
-    static fixWhitespace(xmlToFix) {
+    fixWhitespace(xmlToFix) {
         return new Promise((resolve, reject) => {
             console.log("Fixing whitespace.");
             resolve(pd.xml(xmlToFix));

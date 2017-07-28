@@ -3,7 +3,7 @@ require("babel-polyfill");
 import fs from 'fs-extra';
 
 class FileHandler {
-    static readXml(fileToRead) {
+    readXml(fileToRead) {
         return new Promise((resolve, reject) => {
             console.log(`Reading xml file ${fileToRead} ...`);
 
@@ -11,19 +11,19 @@ class FileHandler {
         });
     }
  
-    static writeXml(xmlToWrite, filePath) {
+    writeXml(xmlToWrite, filePath) {
         return fs.writeFile(filePath, xmlToWrite);
     }
 
-    static deleteUnzipDirectory(directoryPath) {
-        console.log("Deleting temporary unzip directory...");
+    deleteDirectory(directoryPath) {
+        console.log("Deleting directory...");
         return fs.remove(directoryPath)
             .then(() => {
-                console.log('Deleted unzip folder.');
+                console.log('Deleted folder.');
             });
     }
 
-    static deleteFile(filePath) {
+    deleteFile(filePath) {
         return fs.remove(filePath);
     }
 }
