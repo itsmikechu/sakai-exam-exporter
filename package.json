@@ -11,9 +11,9 @@
     "cheerio": "^1.0.0-rc.2",
     "csvtojson": "^1.1.7",
     "download": "^6.2.5",
-    "fs-extra": "^4.0.0",
+    "fs-extra": "^4.0.1",
     "nightmare": "^2.10.0",
-    "nightmare-inline-download": "^0.2.2",
+    "nightmare-download-manager": "^0.2.4",
     "pretty-data": "^0.40.0",
     "zip-folder": "^1.0.0"
   },
