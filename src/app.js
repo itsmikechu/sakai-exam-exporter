@@ -43,7 +43,7 @@ class App {
             .then((xml) => qtiCorrector.fixWhitespace(xml))
             .then((xml) => qtiXml = xml);
 
-        const examTitle = (await qtiCorrector.getExamTitle(qtiXml)).replace(',', '').replace('\\', '-');
+        const examTitle = (await qtiCorrector.getExamTitle(qtiXml)).replace(',', '').replace('/', '-').replace('\\', '-');
 
         const mainifestCorrector = new ManifestCorrector();
 
@@ -55,6 +55,7 @@ class App {
             .then((xml) => mainifestCorrector.fixWhitespace(xml))
             .then((xml) => manifestXml = xml);
 
+        console.log(`New exam title ${examTitle}`);
         await fileHandler.writeStringToPath(qtiXml, `${pathToUnzipTo}\\${examTitle}.xml`);
         await fileHandler.deleteFile(qtiXmlFile);
         await fileHandler.writeStringToPath(manifestXml, manifestXmlFile);
