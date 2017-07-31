@@ -8,16 +8,16 @@ import FileHandler from './FileHandler';
 import config from './config.json'
 
 class App {
-    async process(assessmentId, guid) {
-        console.log(`Starting to process ${assessmentId} in Sakai course ${guid}...`);
-        const urlToDownloadFrom = `https://study.ashworthcollege.edu/samigo-app/servlet/DownloadCP?&assessmentId=${assessmentId}`;
-        const pathToSaveZipTo = `${config.workingFolder}\\${guid}\\Sakai-${assessmentId}.zip`;
-        const pathToUnzipTo = `${config.workingFolder}\\${guid}\\${assessmentId}`;
+    async process(examInfo) {
+        console.log(`Starting to process ${examInfo.sakaiAssessmentId} in Sakai course ${examInfo.sakaiGuid}...`);
+        const urlToDownloadFrom = `https://study.ashworthcollege.edu/samigo-app/servlet/DownloadCP?&assessmentId=${examInfo.sakaiAssessmentId}`;
+        const pathToSaveZipTo = `${config.workingFolder}\\${examInfo.sakaiGuid}\\Sakai-${examInfo.sakaiAssessmentId}.zip`;
+        const pathToUnzipTo = `${config.workingFolder}\\${examInfo.sakaiGuid}\\${examInfo.sakaiAssessmentId}`;
         const qtiXmlFile = `${pathToUnzipTo}\\exportAssessment.xml`;
         const manifestXmlFile = `${pathToUnzipTo}\\imsmanifest.xml`;
 
         await (new Downloader()).downloadPackage(urlToDownloadFrom, pathToSaveZipTo);
-        
+
         const archiver = new Archiver();
         await archiver.extractContentPackage(pathToSaveZipTo, pathToUnzipTo);
 
@@ -55,16 +55,17 @@ class App {
             .then((xml) => mainifestCorrector.fixWhitespace(xml))
             .then((xml) => manifestXml = xml);
 
-        await fileHandler.writeXml(qtiXml, `${pathToUnzipTo}\\${examTitle}.xml`);
+        await fileHandler.writeStringToPath(qtiXml, `${pathToUnzipTo}\\${examTitle}.xml`);
         await fileHandler.deleteFile(qtiXmlFile);
-        await fileHandler.writeXml(manifestXml, manifestXmlFile);
+        await fileHandler.writeStringToPath(manifestXml, manifestXmlFile);
 
-        const outputFile = `${config.workingFolder}\\${guid}\\Brightspace-${examTitle}.zip`;
+        const outputFile = `${config.workingFolder}\\${examInfo.sakaiGuid}\\Brightspace-${examTitle}.zip`;
         await archiver.rezip(pathToUnzipTo, outputFile);
 
         await fileHandler.deleteDirectory(pathToUnzipTo);
 
-        console.log(`Completed processing ${assessmentId}. Files saved to ${outputFile}`);
+        console.log(`Completed processing ${examInfo.sakaiAssessmentId}. Files saved to ${outputFile}`);
+        return outputFile;
     }
 
     static async main() {
@@ -74,8 +75,20 @@ class App {
         const exams = await fileHandler.readCsv(`${config.workingFolder}\\quizzes.csv`);
 
         for (let exam of exams) {
-            await (new App()).process(exam.id, exam.guid);
+            exam.zipPath = await (new App()).process(exam);
         }
+
+        // https://stackoverflow.com/questions/8847766/how-to-convert-json-to-csv-format-and-store-in-a-variable
+        const fields = Object.keys(exams[0])
+        const replacer = function (key, value) { return value === null ? '' : value }
+        const csv = exams.map(function (row) {
+            return fields.map(function (fieldName) {
+                return JSON.stringify(row[fieldName], replacer)
+            }).join(',')
+        })
+        csv.unshift(fields.join(',')) // add header column
+
+        fileHandler.writeStringToPath(csv.join('\r\n'), `${config.workingFolder}\\quizzes-output.csv`);
 
         console.log('Done with batch.');
         console.timeEnd('main');
