@@ -8,13 +8,20 @@ class Downloader {
     async downloadPackage(downloadUrl, pathToSaveTo) {
         console.log(`Downloading content package from ${downloadUrl} to ${pathToSaveTo} ...`);
 
-        require('nightmare-inline-download')(Nightmare);
+        require('nightmare-download-manager')(Nightmare);
 
-        await Nightmare({
+        const nightmare = Nightmare({
             paths: {
                 downloads: path.dirname(pathToSaveTo)
             },
-        }) 
+        });
+
+        await nightmare.downloadManager()
+            .on('download', function (state, downloadItem) {
+                if (state == 'started') {
+                    nightmare.emit('download', pathToSaveTo, downloadItem);
+                }
+            })
             // login      
             .goto('https://study.ashworthcollege.edu/portal')
             .type('#eid', config.sakaiUserIDForDownloading)
@@ -27,7 +34,7 @@ class Downloader {
             // then click it
             .click('#click-me')
             // wait for the download
-            .download(pathToSaveTo)
+            .waitDownloadsComplete()
             // logout the session
             .goto('https://study.ashworthcollege.edu/portal/logout')
             .end()
