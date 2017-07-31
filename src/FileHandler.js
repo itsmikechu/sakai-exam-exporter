@@ -27,8 +27,14 @@ class FileHandler {
                     exams.push(exam);
                 })
                 .on('done', (error) => {
-                    console.log('File read.');
-                    resolve(exams);
+                    if (error) {
+                        console.log(error); 
+                        reject(error);
+                    }
+                    else {
+                        console.log('File read.');
+                        resolve(exams);
+                    }
                 });
         });
     }

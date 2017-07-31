@@ -5,14 +5,14 @@ import Downloader from './Downloader';
 import QtiCorrector from './QtiCorrector';
 import ManifestCorrector from './ManifestCorrector';
 import FileHandler from './FileHandler';
+import config from './config.json'
 
 class App {
     async process(assessmentId, guid) {
         console.log(`Starting to process ${assessmentId} in Sakai course ${guid}...`);
-        const baseFolder = 'c:\\Users\\mike\\Downloads';
         const urlToDownloadFrom = `https://study.ashworthcollege.edu/samigo-app/servlet/DownloadCP?&assessmentId=${assessmentId}`;
-        const pathToSaveZipTo = `${baseFolder}\\${guid}\\Sakai-${assessmentId}.zip`;
-        const pathToUnzipTo = `${baseFolder}\\${guid}\\${assessmentId}`;
+        const pathToSaveZipTo = `${config.workingFolder}\\${guid}\\Sakai-${assessmentId}.zip`;
+        const pathToUnzipTo = `${config.workingFolder}\\${guid}\\${assessmentId}`;
         const qtiXmlFile = `${pathToUnzipTo}\\exportAssessment.xml`;
         const manifestXmlFile = `${pathToUnzipTo}\\imsmanifest.xml`;
 
@@ -59,7 +59,7 @@ class App {
         await fileHandler.deleteFile(qtiXmlFile);
         await fileHandler.writeXml(manifestXml, manifestXmlFile);
 
-        const outputFile = `${baseFolder}\\${guid}\\Brightspace-${examTitle}.zip`;
+        const outputFile = `${config.workingFolder}\\${guid}\\Brightspace-${examTitle}.zip`;
         await archiver.rezip(pathToUnzipTo, outputFile);
 
         await fileHandler.deleteDirectory(pathToUnzipTo);
@@ -67,11 +67,11 @@ class App {
         console.log(`Completed processing ${assessmentId}. Files saved to ${outputFile}`);
     }
 
-    static async main(csvPath) {
+    static async main() {
         console.time('main');
 
         const fileHandler = new FileHandler();
-        const exams = await fileHandler.readCsv(csvPath);
+        const exams = await fileHandler.readCsv(`${config.workingFolder}\\quizzes.csv`);
 
         for (let exam of exams) {
             await (new App()).process(exam.id, exam.guid);
@@ -82,4 +82,4 @@ class App {
     }
 }
 
-App.main('c:\\Users\\mike\\Desktop\\export.csv');
+App.main();

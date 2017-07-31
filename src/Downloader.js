@@ -2,6 +2,7 @@ require("babel-polyfill");
 
 import Nightmare from 'Nightmare';
 import path from 'path';
+import config from './config.json';
 
 class Downloader {
     async downloadPackage(downloadUrl, pathToSaveTo) {
@@ -16,8 +17,8 @@ class Downloader {
         }) 
             // login      
             .goto('https://study.ashworthcollege.edu/portal')
-            .type('#eid', 'mchu.adm')
-            .type('#pw', 'vrM5tPsl4*^H407nz')
+            .type('#eid', config.sakaiUserIDForDownloading)
+            .type('#pw', config.sakaiPasswordForDownloading)
             .click('#submit')
             // wait for the login to complete
             .wait('.all-sites-icon')

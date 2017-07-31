@@ -53,3 +53,6 @@ typings/
 
 # visual studio code
 .vscode
+
+# App configuration 
+config.json
