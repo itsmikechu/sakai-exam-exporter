@@ -43,7 +43,7 @@ class App {
             .then((xml) => qtiCorrector.fixWhitespace(xml))
             .then((xml) => qtiXml = xml);
 
-        const examTitle = (await qtiCorrector.getExamTitle(qtiXml)).replace(',', '').replace('/', '-').replace('\\', '-').replace(':', '-');
+        const examTitle = (await qtiCorrector.getExamTitle(qtiXml)).replace(',', '').replace('/', '-').replace('\\', '-').replace(new RegExp(':', 'g'), '-');
 
         const mainifestCorrector = new ManifestCorrector();
 
