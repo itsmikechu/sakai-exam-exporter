@@ -16,6 +16,10 @@ class FileHandler {
         return fs.writeFile(filePath, dataString);
     }
 
+    appendStringToPath(dataString, filePath) {
+        return fs.appendFile(filePath, dataString);
+    }
+
     readCsv(csvFilePath) {
         console.log('Reading CSV file...');
 

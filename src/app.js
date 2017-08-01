@@ -75,21 +75,23 @@ class App {
         const fileHandler = new FileHandler();
         const exams = await fileHandler.readCsv(`${config.workingFolder}\\quizzes.csv`);
 
-        for (let exam of exams) {
-            exam.zipPath = await (new App()).process(exam);
-        }
-
         // https://stackoverflow.com/questions/8847766/how-to-convert-json-to-csv-format-and-store-in-a-variable
         const fields = Object.keys(exams[0])
-        const replacer = function (key, value) { return value === null ? '' : value }
-        const csv = exams.map(function (row) {
-            return fields.map(function (fieldName) {
-                return JSON.stringify(row[fieldName], replacer)
-            }).join(',')
-        })
-        csv.unshift(fields.join(',')) // add header column
+        const replacer = (key, value) => { return value === null ? '' : value }
+        const outputCsvFile = `${config.workingFolder}\\quizzes-output.csv`;
 
-        fileHandler.writeStringToPath(csv.join('\r\n'), `${config.workingFolder}\\quizzes-output.csv`);
+        const header = fields.join(',');
+        await fileHandler.appendStringToPath(`${header}\r\n`, outputCsvFile);
+
+        for (let exam of exams) {
+            exam.zipPath = await (new App()).process(exam);
+
+            const csv = fields.map((fieldName) => {
+                return JSON.stringify(exam[fieldName], replacer)
+            }).join(',');
+
+            await fileHandler.appendStringToPath(`${csv}\r\n`, outputCsvFile);
+        }
 
         console.log('Done with batch.');
         console.timeEnd('main');
