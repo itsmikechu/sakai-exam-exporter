@@ -1,7 +1,5 @@
-require("babel-polyfill");
-
-import cheerio from 'cheerio';
-import { pd } from 'pretty-data';
+const cheerio = require('cheerio');
+const pd = require('pretty-data').pd;
 
 class QtiCorrector {
     selectCorrectAnswer(xmlToFix) {
@@ -28,7 +26,7 @@ class QtiCorrector {
     }
 
     removeEmptyAnswers(xmlToFix) {
-         return new Promise((resolve, reject) => {
+        return new Promise((resolve, reject) => {
             console.log("Removing excess answers...");
 
             const $ = cheerio.load(xmlToFix, {
@@ -37,9 +35,9 @@ class QtiCorrector {
             });
 
             $('response_label').map((index, element) => {
-               if (typeof $(element).attr('ident') === 'undefined') {
-                   $(element).remove();
-               }
+                if (typeof $(element).attr('ident') === 'undefined') {
+                    $(element).remove();
+                }
             });
 
             const fixedXml = $.html();
@@ -126,8 +124,8 @@ class QtiCorrector {
             });
 
             $(nodeName).map((index, element) => {
-               const content = $(element).children();
-               $(element).parent().empty().append(content);
+                const content = $(element).children();
+                $(element).parent().empty().append(content);
             });
 
             const fixedXml = $.html();
@@ -146,4 +144,4 @@ class QtiCorrector {
     }
 }
 
-export default QtiCorrector;
+module.exports = QtiCorrector;

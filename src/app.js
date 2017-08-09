@@ -1,11 +1,11 @@
 require("babel-polyfill");
 
-import Archiver from './Archiver';
-import Downloader from './Downloader';
-import QtiCorrector from './QtiCorrector';
-import ManifestCorrector from './ManifestCorrector';
-import FileHandler from './FileHandler';
-import config from './config.json'
+const Archiver = require('./Archiver');
+const Downloader = require('./Downloader');
+const QtiCorrector = require('./QtiCorrector');
+const ManifestCorrector = require('./ManifestCorrector');
+const FileHandler = require('./FileHandler');
+const config = require('./config.json');
 
 class App {
     async process(assessmentId, guid) {

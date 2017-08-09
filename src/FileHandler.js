@@ -1,7 +1,5 @@
-require("babel-polyfill");
-
-import fs from 'fs-extra';
-import csv from 'csvtojson';
+const fs = require('fs-extra');
+const csv = require'csvtojson');
 
 class FileHandler {
     readXml(fileToRead) {
@@ -28,7 +26,7 @@ class FileHandler {
                 })
                 .on('done', (error) => {
                     if (error) {
-                        console.log(error); 
+                        console.log(error);
                         reject(error);
                     }
                     else {
@@ -52,4 +50,4 @@ class FileHandler {
     }
 }
 
-export default FileHandler;
+module.exports = FileHandler;

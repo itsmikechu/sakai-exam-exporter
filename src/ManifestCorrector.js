@@ -1,14 +1,12 @@
-require("babel-polyfill");
-
-import cheerio from 'cheerio';
-import { pd } from 'pretty-data';
+const cheerio = require('cheerio');
+const pd = require('pretty-data').pd;
 
 class ManifestCorretcor {
     fixWhitespace(xmlToFix) {
         return new Promise((resolve, reject) => {
             console.log("Fixing whitespace.");
             resolve(pd.xml(xmlToFix));
-        }); 
+        });
     }
 
     addSchemaTag(xmlToFix) {
@@ -39,7 +37,7 @@ class ManifestCorretcor {
 
             resolve(fixedXml);
         });
-    } 
+    }
 
     addSchemaVersionTag(xmlToFix) {
         return new Promise((resolve, reject) => {
@@ -60,4 +58,4 @@ class ManifestCorretcor {
     }
 }
 
-export default ManifestCorretcor;
+module.exports = ManifestCorretcor;

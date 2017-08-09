@@ -1,8 +1,6 @@
-require("babel-polyfill");
-
-import Nightmare from 'Nightmare';
-import path from 'path';
-import config from './config.json';
+const Nightmare = require('Nightmare');
+const path = require('path');
+const config = require('./config.json');
 
 class Downloader {
     async downloadPackage(downloadUrl, pathToSaveTo) {
@@ -47,4 +45,4 @@ class Downloader {
     }
 }
 
-export default Downloader;
+module.exports = Downloader;

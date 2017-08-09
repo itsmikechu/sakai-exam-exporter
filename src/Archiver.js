@@ -1,7 +1,5 @@
-require("babel-polyfill");
-
-import AdmZip from 'adm-zip';
-import zipFolder from 'zip-folder';
+const AdmZip = require('adm-zip');
+const zipFolder = require('zip-folder');
 
 class Archiver {
     extractContentPackage(pathToZip, parentDirectoryToSaveContentsInto) {
@@ -31,4 +29,4 @@ class Archiver {
     }
 }
 
-export default Archiver;  
+module.exports = Archiver;  

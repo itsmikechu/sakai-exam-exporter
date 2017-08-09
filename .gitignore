@@ -51,8 +51,5 @@ typings/
 # dotenv environment variables file
 .env
 
-# visual studio code
-.vscode
-
 # App configuration 
 config.json
