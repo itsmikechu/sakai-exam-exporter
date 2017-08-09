@@ -56,9 +56,9 @@ class QtiCorrector {
                 xmlMode: true
             });
 
-            const title = $('assessment').first().attr('title');
+            const title = ($('assessment').first().attr('title') || "No Title");
 
-            console.log("Found title.")
+            console.log("Found title.");
             resolve(title);
         });
     }
