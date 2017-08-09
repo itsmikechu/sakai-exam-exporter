@@ -6,16 +6,16 @@ const FileHandler = require('./FileHandler');
 const config = require('./config.json');
 
 class App {
-    async process(assessmentId, guid) {
-        console.log(`Starting to process ${assessmentId} in Sakai course ${guid}...`);
-        const urlToDownloadFrom = `https://study.ashworthcollege.edu/samigo-app/servlet/DownloadCP?&assessmentId=${assessmentId}`;
-        const pathToSaveZipTo = `${config.workingFolder}\\${guid}\\Sakai-${assessmentId}.zip`;
-        const pathToUnzipTo = `${config.workingFolder}\\${guid}\\${assessmentId}`;
+    async process(examInfo) {
+        console.log(`Starting to process ${examInfo.sakaiAssessmentId} in Sakai course ${examInfo.sakaiGuid}...`);
+        const urlToDownloadFrom = `https://study.ashworthcollege.edu/samigo-app/servlet/DownloadCP?&assessmentId=${examInfo.sakaiAssessmentId}`;
+        const pathToSaveZipTo = `${config.workingFolder}\\${examInfo.sakaiGuid}\\Sakai-${examInfo.sakaiAssessmentId}.zip`;
+        const pathToUnzipTo = `${config.workingFolder}\\${examInfo.sakaiGuid}\\${examInfo.sakaiAssessmentId}`;
         const qtiXmlFile = `${pathToUnzipTo}\\exportAssessment.xml`;
         const manifestXmlFile = `${pathToUnzipTo}\\imsmanifest.xml`;
 
         await (new Downloader()).downloadPackage(urlToDownloadFrom, pathToSaveZipTo);
-        
+
         const archiver = new Archiver();
         await archiver.extractContentPackage(pathToSaveZipTo, pathToUnzipTo);
 
@@ -41,7 +41,7 @@ class App {
             .then((xml) => qtiCorrector.fixWhitespace(xml))
             .then((xml) => qtiXml = xml);
 
-        const examTitle = (await qtiCorrector.getExamTitle(qtiXml)).replace(',', '');
+        const examTitle = (await qtiCorrector.getExamTitle(qtiXml)).replace(',', '').replace('/', '-').replace('\\', '-').replace(new RegExp(':', 'g'), '-');
 
         const mainifestCorrector = new ManifestCorrector();
 
@@ -53,16 +53,18 @@ class App {
             .then((xml) => mainifestCorrector.fixWhitespace(xml))
             .then((xml) => manifestXml = xml);
 
-        await fileHandler.writeXml(qtiXml, `${pathToUnzipTo}\\${examTitle}.xml`);
+        console.log(`New exam title ${examTitle}`);
+        await fileHandler.writeStringToPath(qtiXml, `${pathToUnzipTo}\\${examTitle}.xml`);
         await fileHandler.deleteFile(qtiXmlFile);
-        await fileHandler.writeXml(manifestXml, manifestXmlFile);
+        await fileHandler.writeStringToPath(manifestXml, manifestXmlFile);
 
-        const outputFile = `${config.workingFolder}\\${guid}\\Brightspace-${examTitle}.zip`;
+        const outputFile = `${config.workingFolder}\\${examInfo.sakaiGuid}\\Brightspace-${examTitle}.zip`;
         await archiver.rezip(pathToUnzipTo, outputFile);
 
         await fileHandler.deleteDirectory(pathToUnzipTo);
 
-        console.log(`Completed processing ${assessmentId}. Files saved to ${outputFile}`);
+        console.log(`Completed processing ${examInfo.sakaiAssessmentId}. Files saved to ${outputFile}`);
+        return outputFile;
     }
 
     static async main() {
@@ -71,8 +73,22 @@ class App {
         const fileHandler = new FileHandler();
         const exams = await fileHandler.readCsv(`${config.workingFolder}\\quizzes.csv`);
 
+        // https://stackoverflow.com/questions/8847766/how-to-convert-json-to-csv-format-and-store-in-a-variable
+        const fields = Object.keys(exams[0])
+        const replacer = (key, value) => { return value === null ? '' : value }
+        const outputCsvFile = `${config.workingFolder}\\quizzes-output.csv`;
+
+        const header = fields.join(',');
+        await fileHandler.appendStringToPath(`${header}\r\n`, outputCsvFile);
+
         for (let exam of exams) {
-            await (new App()).process(exam.id, exam.guid);
+            exam.zipPath = await (new App()).process(exam);
+
+            const csv = fields.map((fieldName) => {
+                return JSON.stringify(exam[fieldName], replacer)
+            }).join(',');
+
+            await fileHandler.appendStringToPath(`${csv}\r\n`, outputCsvFile);
         }
 
         console.log('Done with batch.');

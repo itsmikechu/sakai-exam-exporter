@@ -10,8 +10,12 @@ class FileHandler {
         });
     }
 
-    writeXml(xmlToWrite, filePath) {
-        return fs.writeFile(filePath, xmlToWrite);
+    writeStringToPath(dataString, filePath) {
+        return fs.writeFile(filePath, dataString);
+    }
+
+    appendStringToPath(dataString, filePath) {
+        return fs.appendFile(filePath, dataString);
     }
 
     readCsv(csvFilePath) {
