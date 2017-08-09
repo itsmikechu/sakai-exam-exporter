@@ -1,5 +1,5 @@
 const fs = require('fs-extra');
-const csv = require'csvtojson');
+const csv = require('csvtojson');
 
 class FileHandler {
     readXml(fileToRead) {

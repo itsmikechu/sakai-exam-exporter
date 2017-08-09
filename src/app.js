@@ -1,5 +1,3 @@
-require("babel-polyfill");
-
 const Archiver = require('./Archiver');
 const Downloader = require('./Downloader');
 const QtiCorrector = require('./QtiCorrector');
