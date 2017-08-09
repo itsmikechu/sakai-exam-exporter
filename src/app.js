@@ -79,6 +79,10 @@ class App {
         const outputCsvFile = `${config.workingFolder}\\quizzes-output.csv`;
 
         const header = fields.join(',');
+        if (!header.includes('zipPath')) {
+            throw "Input quizzes.csv files does not have a column called 'zipPath'. Please add it.";
+        }
+
         await fileHandler.appendStringToPath(`${header}\r\n`, outputCsvFile);
 
         for (let exam of exams) {
