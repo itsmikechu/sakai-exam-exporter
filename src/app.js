@@ -43,8 +43,8 @@ class App {
 
         const examTitle = (await qtiCorrector.getExamTitle(qtiXml))
             .replace(new RegExp(',', 'g'), '')
-            .replace(new RegExp('/', 'g'),, '-')
-            .replace(new RegExp('\\', 'g'), '-')
+            .replace(new RegExp('\/', 'g'), '-')
+            .replace(new RegExp('\\\\', 'g'), '-')
             .replace(new RegExp(':', 'g'), '-')
             .replace(new RegExp('&', 'g'), '');
 
