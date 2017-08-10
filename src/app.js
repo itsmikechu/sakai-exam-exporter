@@ -46,6 +46,7 @@ class App {
             .replace(new RegExp('\/', 'g'), '-')
             .replace(new RegExp('\\\\', 'g'), '-')
             .replace(new RegExp(':', 'g'), '-')
+            .replace(new RegExp('\\?', 'g'), '')
             .replace(new RegExp('&', 'g'), '');
 
         const mainifestCorrector = new ManifestCorrector();
