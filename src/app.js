@@ -83,6 +83,7 @@ class App {
         const fields = Object.keys(exams[0])
         const replacer = (key, value) => { return value === null ? '' : value }
         const outputCsvFile = `${config.workingFolder}\\quizzes-output.csv`;
+        const errorCsvFile = `${config.workingFolder}\\quizzes-errors.csv`;
 
         const header = fields.join(',');
         if (!header.includes('zipPath')) {
@@ -92,13 +93,22 @@ class App {
         await fileHandler.appendStringToPath(`${header}\r\n`, outputCsvFile);
 
         for (let exam of exams) {
-            exam.zipPath = await (new App()).process(exam);
+            try {
+                exam.zipPath = await (new App()).process(exam);
 
-            const csv = fields.map((fieldName) => {
-                return JSON.stringify(exam[fieldName], replacer)
-            }).join(',');
+                const csv = fields.map((fieldName) => {
+                    return JSON.stringify(exam[fieldName], replacer)
+                }).join(',');
 
-            await fileHandler.appendStringToPath(`${csv}\r\n`, outputCsvFile);
+                await fileHandler.appendStringToPath(`${csv}\r\n`, outputCsvFile);
+            }
+            catch (error) {
+                const csv = fields.map((fieldName) => {
+                    return JSON.stringify(assignment[fieldName], replacer)
+                }).join(',');
+
+                await fileHandler.appendStringToPath(`${csv}\r\n`, errorCsvFile);
+            }
         }
 
         console.log('Done with batch.');
