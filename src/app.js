@@ -47,7 +47,8 @@ class App {
             .replace(new RegExp('\\\\', 'g'), '-')
             .replace(new RegExp(':', 'g'), '-')
             .replace(new RegExp('\\?', 'g'), '')
-            .replace(new RegExp('&', 'g'), '');
+            .replace(new RegExp('&', 'g'), '')
+            .substring(0, 123); // Brightspace chokes when the title is too long
 
         const mainifestCorrector = new ManifestCorrector();
 
